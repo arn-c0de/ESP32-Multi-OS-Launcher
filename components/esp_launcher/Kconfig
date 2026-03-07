@@ -1,0 +1,43 @@
+menu "ESP32 Multi-OS Launcher"
+
+    config LAUNCHER_PIN_BOOT_BUTTON
+        int "Boot/Activation Button GPIO"
+        default 26
+        help
+            GPIO pin to hold during boot to enter the launcher.
+
+    config LAUNCHER_PIN_SD_CS
+        int "SD Card CS GPIO"
+        default 13
+
+    config LAUNCHER_PIN_SPI_MOSI
+        int "SPI MOSI GPIO"
+        default 23
+
+    config LAUNCHER_PIN_SPI_MISO
+        int "SPI MISO GPIO"
+        default 19
+
+    config LAUNCHER_PIN_SPI_SCK
+        int "SPI SCK GPIO"
+        default 18
+
+    config LAUNCHER_PIN_ENCODER_CLK
+        int "Encoder CLK GPIO"
+        default 33
+
+    config LAUNCHER_PIN_ENCODER_DT
+        int "Encoder DT GPIO"
+        default 32
+
+    config LAUNCHER_PIN_ENCODER_SW
+        int "Encoder Button SW GPIO"
+        default 25
+
+    config LAUNCHER_FW_DIR
+        string "Firmware directory on SD"
+        default "/firmware"
+        help
+            The folder on the SD card where .bin files are stored.
+
+endmenu

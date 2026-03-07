@@ -1,0 +1,28 @@
+# ESP-IDF
+build/
+sdkconfig
+sdkconfig.old
+dependencies.lock
+managed_components/
+
+# C/C++
+*.o
+*.a
+*.so
+*.d
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.bak
+.DS_Store
+
+# Temporary files
+tmp/
+*.tmp
+*.log
+
+# SD card binaries (examples)
+*.bin
+!/docs/*.bin
