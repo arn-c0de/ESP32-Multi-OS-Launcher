@@ -4,13 +4,13 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Platform: ESP32](https://img.shields.io/badge/Platform-ESP32-red.svg)](https://www.espressif.com/en/products/socs/esp32)
 
-A **highly modular ESP32-IDF component** that allows any application to flash other operating systems from an SD card. It transforms your ESP32 into a multi-boot system where every OS can launch another.
+A highly modular ESP32-IDF component that allows any application to flash other operating systems from an SD card. It transforms your ESP32 into a multi-boot system where every OS can launch another.
 
 ---
 
-## 🛠 Required Parts List
+## Required Hardware
 
-To build a full Multi-OS setup, you will need the following hardware components:
+To build a full Multi-OS setup, the following hardware components are required:
 
 | Part | Description | Recommended Model |
 |------|-------------|-------------------|
@@ -23,19 +23,19 @@ To build a full Multi-OS setup, you will need the following hardware components:
 
 ---
 
-## 🚀 Key Features
-- **Ultra-Small Footprint**: SD and UI logic are only loaded when the launcher is activated, saving RAM for your main app.
-- **Safe OTA Flashing**: Uses the native `esp_ota` API to always flash to the inactive partition, preventing bricks.
-- **Kconfig Integration**: Configure all GPIO pins (SD, Encoder, Button) via `menuconfig` without changing source code.
+## Key Features
+- **Ultra-Small Footprint**: SD and UI logic are only loaded when the launcher is activated, saving RAM for your main application.
+- **Safe OTA Flashing**: Uses the native `esp_ota` API to always flash to the inactive partition, preventing system corruption.
+- **Kconfig Integration**: Configure all GPIO pins (SD, Encoder, Button) via `menuconfig` without modifying source code.
 - **Software Reboot**: Switch between operating systems directly from your application's software menu.
-- **Dual-Partition Boot**: Support for seamless switching between `ota_0` and `ota_1`.
+- **Dual-Partition Boot**: Full support for seamless switching between `ota_0` and `ota_1` partitions.
 
 ---
 
-## 📦 Quick Start (Integration)
+## Quick Start (Integration)
 
 1. **Copy Component**: Copy the `components/esp_launcher` folder into your project's `components/` directory.
-2. **Setup Partitions**: Use an OTA-capable `partitions.csv` (see `docs/INTEGRATION_GUIDE.md`).
+2. **Setup Partitions**: Use an OTA-capable `partitions.csv` (see `docs/INTEGRATION_GUIDE.md` for details).
 3. **Add Code**:
    ```c
    #include "esp_launcher.h"
@@ -51,17 +51,17 @@ To build a full Multi-OS setup, you will need the following hardware components:
 
 ---
 
-## 📂 Folder Structure
+## Project Structure
 - `components/esp_launcher/`: The core modular component.
 - `main/`: A minimal template application.
 - `docs/`:
-    - `INTEGRATION_GUIDE.md`: How to add this to your project.
-    - `HARDWARE_PINOUT.md`: Default wiring and SPI sharing.
-    - `SD_FIRMWARE_PACKAGING.md`: How to prepare your SD card.
+    - `INTEGRATION_GUIDE.md`: Comprehensive addition guide.
+    - `HARDWARE_PINOUT.md`: Default wiring and SPI sharing details.
+    - `SD_FIRMWARE_PACKAGING.md`: SD card preparation instructions.
 
 ---
 
-## 🔌 Default Hardware Pins
+## Default Hardware Configuration
 *(Configurable via Kconfig)*
 - **Activation Button**: GPIO 26
 - **SD Card (SPI2)**: MISO 19, MOSI 23, SCK 18, CS 13
@@ -69,5 +69,6 @@ To build a full Multi-OS setup, you will need the following hardware components:
 
 ---
 
-## 📜 License
-Distributed under the MIT License. See `LICENSE` for more information.
+## License
+Distributed under the MIT License. See `LICENSE` for further details.
+1
