@@ -71,4 +71,3 @@ To build a full Multi-OS setup, the following hardware components are required:
 
 ## License
 Distributed under the MIT License. See `LICENSE` for further details.
-1
