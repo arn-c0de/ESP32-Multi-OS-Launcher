@@ -1,35 +1,73 @@
 # ESP32 Multi-OS Launcher (Modular Component)
 
-This project has been transformed into a **highly modular ESP32-IDF component**. You can now integrate this launcher into ANY of your ESP32 projects with just a few lines of code.
+[![ESP-IDF Version](https://img.shields.io/badge/ESP--IDF-v5.0+-blue.svg)](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Platform: ESP32](https://img.shields.io/badge/Platform-ESP32-red.svg)](https://www.espressif.com/en/products/socs/esp32)
 
-## Key Features
-- **Ultra-Small Footprint**: Only loads SD and UI logic when the launcher is actually activated.
-- **Safe OTA Flashing**: Uses `esp_ota` to always flash to the inactive partition, ensuring your device never "bricks".
-- **Kconfig Integration**: Configure all GPIO pins (SD, Encoder, Button) via `menuconfig` without changing code.
-- **Software Reboot**: Switch OS from your app's software menu.
+A **highly modular ESP32-IDF component** that allows any application to flash other operating systems from an SD card. It transforms your ESP32 into a multi-boot system where every OS can launch another.
 
-## Quick Start (Integration)
+---
+
+## 🛠 Required Parts List
+
+To build a full Multi-OS setup, you will need the following hardware components:
+
+| Part | Description | Recommended Model |
+|------|-------------|-------------------|
+| **Microcontroller** | ESP32 Development Board | ESP32-WROOM-32 |
+| **Storage** | Micro SD Card Module | SPI Interface Module |
+| **Input** | Rotary Encoder | KY-040 (or similar) |
+| **Input** | Boot/Activation Button | Tactile Momentary Switch |
+| **Display (Optional)** | TFT Display | ST7796 (SPI) or similar |
+| **Memory** | Micro SD Card | 4GB - 32GB (FAT32 formatted) |
+
+---
+
+## 🚀 Key Features
+- **Ultra-Small Footprint**: SD and UI logic are only loaded when the launcher is activated, saving RAM for your main app.
+- **Safe OTA Flashing**: Uses the native `esp_ota` API to always flash to the inactive partition, preventing bricks.
+- **Kconfig Integration**: Configure all GPIO pins (SD, Encoder, Button) via `menuconfig` without changing source code.
+- **Software Reboot**: Switch between operating systems directly from your application's software menu.
+- **Dual-Partition Boot**: Support for seamless switching between `ota_0` and `ota_1`.
+
+---
+
+## 📦 Quick Start (Integration)
 
 1. **Copy Component**: Copy the `components/esp_launcher` folder into your project's `components/` directory.
-2. **Setup Partitions**: Ensure your `partitions.csv` has two OTA partitions (`ota_0` and `ota_1`).
+2. **Setup Partitions**: Use an OTA-capable `partitions.csv` (see `docs/INTEGRATION_GUIDE.md`).
 3. **Add Code**:
    ```c
    #include "esp_launcher.h"
    
    void app_main() {
-       esp_launcher_check_and_run(); // This handles everything!
-       // ... your app logic ...
+       // Checks for button press or software flag on boot
+       esp_launcher_check_and_run(); 
+       
+       // ... your normal app logic continues here ...
    }
    ```
-4. **Configure Pins**: Run `idf.py menuconfig` and go to `ESP32 Multi-OS Launcher` to set your GPIOs.
+4. **Configure Hardware**: Run `idf.py menuconfig` -> `Component config` -> `ESP32 Multi-OS Launcher`.
 
-## Folder Structure
+---
+
+## 📂 Folder Structure
 - `components/esp_launcher/`: The core modular component.
-- `main/`: A minimal example application.
-- `docs/`: Detailed integration and firmware packaging guides.
+- `main/`: A minimal template application.
+- `docs/`:
+    - `INTEGRATION_GUIDE.md`: How to add this to your project.
+    - `HARDWARE_PINOUT.md`: Default wiring and SPI sharing.
+    - `SD_FIRMWARE_PACKAGING.md`: How to prepare your SD card.
 
-## Hardware Support
-Default pins (configurable via Kconfig):
+---
+
+## 🔌 Default Hardware Pins
+*(Configurable via Kconfig)*
 - **Activation Button**: GPIO 26
-- **SD Card**: SPI2 (MISO 19, MOSI 23, SCK 18, CS 13)
+- **SD Card (SPI2)**: MISO 19, MOSI 23, SCK 18, CS 13
 - **Encoder**: CLK 33, DT 32, SW 25
+
+---
+
+## 📜 License
+Distributed under the MIT License. See `LICENSE` for more information.
