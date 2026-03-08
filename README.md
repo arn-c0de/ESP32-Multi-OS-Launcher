@@ -6,12 +6,12 @@
 
 A highly modular ESP32-IDF component that allows any application to flash other operating systems from an SD card. It transforms your ESP32 into a multi-boot system where every OS can launch another.
 
-## Development Status
-
-This project is in active development and primarily serves as a component for testing multi-boot workflows in custom projects.
-Because of that, behavior and interfaces may change continuously over time.
-Stable versions are provided as packages and can be imported into your own projects under the MIT License.
-
+> ## Development Status
+> 
+> This project is in active development and primarily serves as a component for testing multi-boot workflows in custom projects.
+> Because of that, behavior and interfaces may change continuously over time.
+> Stable versions are provided as packages and can be imported into your own projects under the MIT License.
+>
 ---
 
 ## Required Hardware
