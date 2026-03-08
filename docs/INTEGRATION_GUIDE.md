@@ -76,3 +76,9 @@ The launcher uses the `esp_ota` API. It identifies the **currently inactive** pa
 1. Your current OS is never overwritten during the flash process.
 2. If the flash fails, the device simply boots back into the current OS.
 3. Every OS you flash can also contain the launcher, creating a seamless multi-boot environment.
+
+
+## Pushbuttons (AHH-1.0)
+
+- Pushbutton 1: GPIO26
+- Pushbutton 2: GPIO27
