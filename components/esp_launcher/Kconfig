@@ -12,15 +12,15 @@ menu "ESP32 Multi-OS Launcher"
 
     config LAUNCHER_PIN_SPI_MOSI
         int "SPI MOSI GPIO"
-        default 23
+        default 21
 
     config LAUNCHER_PIN_SPI_MISO
         int "SPI MISO GPIO"
-        default 19
+        default 35
 
     config LAUNCHER_PIN_SPI_SCK
         int "SPI SCK GPIO"
-        default 18
+        default 22
 
     config LAUNCHER_PIN_ENCODER_CLK
         int "Encoder CLK GPIO"

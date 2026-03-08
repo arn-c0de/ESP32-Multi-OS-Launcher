@@ -7,12 +7,12 @@ This document describes the default wiring for the Multi-OS Launcher. You can ch
 |---------|------|-------------|
 | **Boot Button** | 26 | Hold LOW to enter Launcher during boot |
 
-## SD Card (SPI2)
+## SD Card (HSPI - Dedicated Bus AHH-1.0)
 | SPI Pin | GPIO |
 |---------|------|
-| **MOSI** | 23 |
-| **MISO** | 19 |
-| **SCK** | 18 |
+| **MOSI** | 21 |
+| **MISO** | 35 |
+| **SCK** | 22 |
 | **CS** | 13 |
 
 ## Encoder
@@ -31,11 +31,12 @@ This document describes the default wiring for the Multi-OS Launcher. You can ch
 | **TFT_DC** | 16 |
 | **TFT_RST** | 17 |
 | **TFT_BL** | 4 |
-| **TFT_MOSI** | 23 (Shared with SD) |
-| **TFT_MISO** | 19 (Shared with SD) |
-| **TFT_SCK** | 18 (Shared with SD) |
+| **TFT_MOSI** | 23 |
+| **TFT_MISO** | 19 |
+| **TFT_SCK** | 18 |
 
-## SPI Bus Sharing
-The SD card and the Display share the same SPI bus (SPI2).
-- Use **GPIO 13** as Chip Select (CS) for the SD card.
-- Use **GPIO 5** as Chip Select (CS) for the Display.
+## SPI Bus Configuration (AHH-1.0)
+For the AHH-1.0 Handheld, the SD card and the Display use **separate SPI buses** to avoid signal interference.
+- **SD Card:** Uses the **HSPI** peripheral (GPIO 21, 22, 35).
+- **Display:** Uses the **VSPI** peripheral (GPIO 18, 19, 23).
+- **CS Pins:** SD uses **GPIO 13**, Display uses **GPIO 5**.
