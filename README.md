@@ -70,10 +70,16 @@ To build a full Multi-OS setup, the following hardware components are required:
 ## Default Hardware Configuration (AHH-1.0 Handheld)
 *(Configurable via Kconfig)*
 - **Activation Button**: GPIO 26
-- **SD Card (HSPI)**: MISO 35, MOSI 21, SCK 22, CS 13
+- **SD Card (HSPI)**: MISO 12, MOSI 14, SCK 22, CS 13
 - **Encoder**: CLK 33, DT 32, SW 25
 
 ---
 
 ## License
 Distributed under the MIT License. See `LICENSE` for further details.
+
+
+## Pushbuttons (AHH-1.0)
+
+- Pushbutton 1: GPIO26
+- Pushbutton 2: GPIO27

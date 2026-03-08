@@ -39,3 +39,9 @@ To ensure every OS can flash back to others:
 1. **Include the Launcher**: Make sure every OS you compile includes the `esp_launcher` component and calls `esp_launcher_check_and_run()` in its startup.
 2. **Unified Partition Layout**: All operating systems should use the same or a compatible partition layout (OTA-0 and OTA-1).
 3. **SD Card Pins**: Ensure all your projects use the same SPI pins for the SD card so the launcher can mount it regardless of which OS is running.
+
+
+## Pushbuttons (AHH-1.0)
+
+- Pushbutton 1: GPIO26
+- Pushbutton 2: GPIO27
