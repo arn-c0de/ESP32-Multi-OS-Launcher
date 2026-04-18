@@ -1,11 +1,15 @@
 #include <stdio.h>
 #include "esp_launcher.h"
 #include "esp_log.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
 
 void app_main(void)
 {
+    esp_launcher_set_app_label("Example App");
+
     // 1. Initial check: If button is held or software flag is set, enter launcher.
-    // This handles SD mounting, UI, and OTA flashing.
+    // The shared launcher menu then offers "Boot <current app>" or the SD browser.
     esp_launcher_check_and_run();
 
     // 2. Normal application logic starts here

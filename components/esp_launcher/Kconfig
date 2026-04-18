@@ -12,11 +12,11 @@ menu "ESP32 Multi-OS Launcher"
 
     config LAUNCHER_PIN_SPI_MOSI
         int "SPI MOSI GPIO"
-        default 21
+        default 14
 
     config LAUNCHER_PIN_SPI_MISO
         int "SPI MISO GPIO"
-        default 35
+        default 12
 
     config LAUNCHER_PIN_SPI_SCK
         int "SPI SCK GPIO"
@@ -33,6 +33,54 @@ menu "ESP32 Multi-OS Launcher"
     config LAUNCHER_PIN_ENCODER_SW
         int "Encoder Button SW GPIO"
         default 25
+
+    config LAUNCHER_ENABLE_TFT_UI
+        bool "Enable built-in ST7796 TFT launcher UI"
+        default y
+        help
+            Renders the shared launcher menu directly on an ST7796-compatible SPI
+            display using the Gladiator launcher style. If initialization fails,
+            the launcher falls back to the Serial UI automatically.
+
+    if LAUNCHER_ENABLE_TFT_UI
+
+    config LAUNCHER_PIN_TFT_CS
+        int "TFT CS GPIO"
+        default 5
+
+    config LAUNCHER_PIN_TFT_DC
+        int "TFT DC GPIO"
+        default 16
+
+    config LAUNCHER_PIN_TFT_RST
+        int "TFT RST GPIO"
+        default 17
+
+    config LAUNCHER_PIN_TFT_BL
+        int "TFT Backlight GPIO"
+        default 4
+
+    config LAUNCHER_PIN_TFT_MOSI
+        int "TFT SPI MOSI GPIO"
+        default 23
+
+    config LAUNCHER_PIN_TFT_MISO
+        int "TFT SPI MISO GPIO"
+        default 19
+
+    config LAUNCHER_PIN_TFT_SCK
+        int "TFT SPI SCK GPIO"
+        default 18
+
+    config LAUNCHER_TFT_WIDTH
+        int "TFT width in pixels"
+        default 320
+
+    config LAUNCHER_TFT_HEIGHT
+        int "TFT height in pixels"
+        default 480
+
+    endif
 
     config LAUNCHER_FW_DIR
         string "Firmware directory on SD"

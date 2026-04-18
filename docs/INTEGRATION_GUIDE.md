@@ -53,8 +53,12 @@ In your `main/main.c`, call the launcher check at the very beginning of `app_mai
 
 void app_main(void)
 {
+    // Optional: rename the shared launcher entry shown as "Boot <name>"
+    esp_launcher_set_app_label("Example App");
+
     // 1. Initial check: If button is held or software flag is set, enter launcher.
-    // This handles SD mounting, UI, and OTA flashing.
+    // This now also provides the shared standard launcher menu:
+    // "Boot <current app>" or "SD Card Browser".
     esp_launcher_check_and_run();
 
     // 2. Normal application logic starts here

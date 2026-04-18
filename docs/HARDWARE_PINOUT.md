@@ -23,7 +23,7 @@ This document describes the default wiring for the Multi-OS Launcher. You can ch
 | **SW (Button)** | 25 |
 
 ## Display (ST7796 4-Wire SPI)
-*Note: The modular component currently uses a Serial UI. These are the recommended pins for your application's display.*
+*Note: The modular component now renders the shared launcher menu itself in a Gladiator-style ST7796 UI and falls back to Serial if the display cannot be initialized.*
 
 | Pin | GPIO |
 |---------|------|

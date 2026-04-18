@@ -4,7 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Platform: ESP32](https://img.shields.io/badge/Platform-ESP32-red.svg)](https://www.espressif.com/en/products/socs/esp32)
 
-A highly modular ESP32-IDF component that allows any application to flash other operating systems from an SD card. It transforms your ESP32 into a multi-boot system where every OS can launch another.
+A modular ESP32-IDF component that lets any application flash other operating systems from an SD card. It turns an ESP32 into a multi-boot system where each integrated firmware can launch the same shared updater flow.
 
 > ## Development Status
 > 
@@ -34,6 +34,9 @@ To build a full Multi-OS setup, the following hardware components are required:
 - **Safe OTA Flashing**: Uses the native `esp_ota` API to always flash to the inactive partition, preventing system corruption.
 - **Kconfig Integration**: Configure all GPIO pins (SD, Encoder, Button) via `menuconfig` without modifying source code.
 - **Software Reboot**: Switch between operating systems directly from your application's software menu.
+- **Shared Standard Menu**: The launcher owns the same boot-or-browse flow for every integrated firmware, so apps no longer need to carry their own launcher menu code.
+- **Gladiator-Style Launcher UI**: The built-in launcher menu uses the Gladiator launcher look on an ST7796 SPI display by default, while staying neutrally branded as `MULTI-OS LAUNCHER`.
+- **Serial Fallback**: If the TFT UI is disabled or the panel cannot be initialized, the launcher falls back to the serial UI automatically.
 - **Dual-Partition Boot**: Full support for seamless switching between `ota_0` and `ota_1` partitions.
 
 ---
@@ -47,6 +50,8 @@ To build a full Multi-OS setup, the following hardware components are required:
    #include "esp_launcher.h"
    
    void app_main() {
+       esp_launcher_set_app_label("Example App");
+
        // Checks for button press or software flag on boot
        esp_launcher_check_and_run(); 
        
@@ -54,6 +59,12 @@ To build a full Multi-OS setup, the following hardware components are required:
    }
    ```
 4. **Configure Hardware**: Run `idf.py menuconfig` -> `Component config` -> `ESP32 Multi-OS Launcher`.
+
+After integration, the shared launcher flow is:
+- `Boot <App Name>`
+- `SD Card Browser`
+
+This only standardizes the launcher menu and flashing flow. Your firmware's normal UI and application menus remain your own.
 
 ---
 
@@ -72,6 +83,12 @@ To build a full Multi-OS setup, the following hardware components are required:
 - **Activation Button**: GPIO 26
 - **SD Card (HSPI)**: MISO 12, MOSI 14, SCK 22, CS 13
 - **Encoder**: CLK 33, DT 32, SW 25
+- **Display (VSPI / ST7796)**: CS 5, DC 16, RST 17, BL 4, MOSI 23, MISO 19, SCK 18
+
+## Launcher UI Notes
+- The shared TFT launcher UI is intended to carry over the Gladiator launcher style, not the complete Gladiator firmware UI.
+- Display support is controlled in `menuconfig` with `Enable built-in ST7796 TFT launcher UI`.
+- The launcher menu remains branded as `MULTI-OS LAUNCHER` so the component can be reused across different projects.
 
 ---
 

@@ -26,6 +26,14 @@ esp_err_t esp_launcher_check_and_run(void);
 void esp_launcher_reboot_to_launcher(void);
 
 /**
+ * @brief Set the label used by the launcher's "boot current firmware" entry.
+ *
+ * Call this once during startup before esp_launcher_check_and_run() if you want
+ * the shared launcher menu to show a firmware-specific name.
+ */
+void esp_launcher_set_app_label(const char *label);
+
+/**
  * @brief Get a list of firmware files from the SD card.
  */
 esp_err_t esp_launcher_list_firmware(firmware_entry_t *entries, size_t *count);
