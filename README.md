@@ -6,6 +6,8 @@
 
 A modular ESP32-IDF component that lets any application flash other operating systems from an SD card. It turns an ESP32 into a multi-boot system where each integrated firmware can launch the same shared updater flow.
 
+The launcher component provides the shared update menu and flashing flow only. It does not replace the normal UI of the application that integrates it.
+
 > ## Development Status
 > 
 > This project is in active development and primarily serves as a component for testing multi-boot workflows in custom projects.
@@ -63,8 +65,24 @@ To build a full Multi-OS setup, the following hardware components are required:
 After integration, the shared launcher flow is:
 - `Boot <App Name>`
 - `SD Card Browser`
+- `Select Firmware`
 
 This only standardizes the launcher menu and flashing flow. Your firmware's normal UI and application menus remain your own.
+
+## Firmware Packaging
+
+Build your application as usual and copy the generated `.bin` file to the SD card. The launcher looks for firmware files in:
+- `/firmware`
+- `/firmwares`
+- `/`
+
+Example:
+
+```text
+/firmware/My_App_v1.0.0.bin
+```
+
+Use `esp_launcher_set_app_label("My App")` if you want the shared entry to be shown as `Boot My App`.
 
 ---
 
@@ -89,6 +107,7 @@ This only standardizes the launcher menu and flashing flow. Your firmware's norm
 - The shared TFT launcher UI is intended to carry over the Gladiator launcher style, not the complete Gladiator firmware UI.
 - Display support is controlled in `menuconfig` with `Enable built-in ST7796 TFT launcher UI`.
 - The launcher menu remains branded as `MULTI-OS LAUNCHER` so the component can be reused across different projects.
+- If the TFT UI is unavailable, the same launcher flow remains available over Serial.
 
 ---
 
