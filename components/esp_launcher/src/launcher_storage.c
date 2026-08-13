@@ -1,6 +1,7 @@
 #include <dirent.h>
 #include <stdio.h>
 #include <string.h>
+#include <strings.h>
 #include <sys/stat.h>
 
 #include "driver/spi_master.h"
@@ -32,14 +33,23 @@ esp_err_t launcher_sd_mount(int mosi, int miso, int sck, int cs)
         .max_transfer_sz = 4000,
     };
 
+    // ESP_ERR_INVALID_STATE means the bus is already initialized (e.g. after a
+    // previous failed mount attempt) - that is fine, keep going.
     esp_err_t ret = spi_bus_initialize(SPI2_HOST, &bus_cfg, SDSPI_DEFAULT_DMA);
-    if (ret != ESP_OK) return ret;
+    if (ret != ESP_OK && ret != ESP_ERR_INVALID_STATE) return ret;
 
     sdspi_device_config_t slot_cfg = SDSPI_DEVICE_CONFIG_DEFAULT();
     slot_cfg.host_id = SPI2_HOST;
     slot_cfg.gpio_cs = cs;
 
-    return esp_vfs_fat_sdspi_mount(MOUNT_POINT, &slot_cfg, &mount_cfg, &s_card);
+    ret = esp_vfs_fat_sdspi_mount(MOUNT_POINT, &slot_cfg, &mount_cfg, &s_card);
+    if (ret != ESP_OK) {
+        // Release the SPI bus so a later retry can re-initialize cleanly.
+        spi_bus_free(SPI2_HOST);
+        s_card = NULL;
+        return ret;
+    }
+    return ESP_OK;
 }
 
 void launcher_sd_unmount(void)
@@ -60,15 +70,20 @@ esp_err_t esp_launcher_list_firmware(firmware_entry_t *entries, size_t *count)
     size_t idx = 0;
     struct dirent *ent;
     while ((ent = readdir(dir)) != NULL && idx < MAX_FW_FILES) {
-        if (strstr(ent->d_name, ".bin")) {
-            snprintf(entries[idx].name, sizeof(entries[idx].name), "%s", ent->d_name);
-            snprintf(entries[idx].path, sizeof(entries[idx].path), "%s/%s", dir_path, ent->d_name);
-            
-            struct stat st;
-            stat(entries[idx].path, &st);
-            entries[idx].size = st.st_size;
-            idx++;
-        }
+        // Match only names ending in ".bin" (case-insensitive), so that
+        // e.g. "FW.BIN" is accepted but "x.bin.bak" is rejected.
+        size_t n = strlen(ent->d_name);
+        if (n < 4 || strcasecmp(ent->d_name + n - 4, ".bin") != 0) continue;
+
+        int written = snprintf(entries[idx].path, sizeof(entries[idx].path), "%s/%s", dir_path, ent->d_name);
+        if (written < 0 || (size_t)written >= sizeof(entries[idx].path)) continue;
+
+        struct stat st;
+        if (stat(entries[idx].path, &st) != 0) continue;
+
+        snprintf(entries[idx].name, sizeof(entries[idx].name), "%s", ent->d_name);
+        entries[idx].size = st.st_size;
+        idx++;
     }
     closedir(dir);
     *count = idx;

@@ -324,7 +324,7 @@ static void launcher_tft_copy_with_ellipsis(char *dest, size_t dest_size, const 
 
 static void launcher_tft_draw_header(const char *title)
 {
-    launcher_tft_fill_rect(0, 0, CONFIG_LAUNCHER_TFT_WIDTH, CONFIG_LAUNCHER_TITLE_BAR_HEIGHT, TFT_NAVY);
+    launcher_tft_fill_rect(0, 0, CONFIG_LAUNCHER_TFT_WIDTH, LAUNCHER_TITLE_BAR_HEIGHT, TFT_NAVY);
     launcher_tft_draw_text_centered(10, title, TFT_CYAN, TFT_NAVY, 2);
 }
 
@@ -579,6 +579,9 @@ static void launcher_print_firmware_menu(const firmware_entry_t *entries, size_t
 
 static int launcher_wait_for_selection(int item_count, launcher_draw_cb_t draw_fn, void *ctx)
 {
+    if (item_count <= 0) {
+        return -1;
+    }
     int selected = 0;
     int last_clk = gpio_get_level(CONFIG_LAUNCHER_PIN_ENCODER_CLK);
     int last_sw = 1;

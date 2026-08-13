@@ -49,11 +49,23 @@ static void clear_boot_flag(void)
 void esp_launcher_reboot_to_launcher(void)
 {
     nvs_handle_t handle;
-    if (nvs_open(NVS_NAMESPACE, NVS_READWRITE, &handle) == ESP_OK) {
-        nvs_set_u8(handle, NVS_KEY_BOOT_FLAG, 1);
-        nvs_commit(handle);
-        nvs_close(handle);
+    esp_err_t err = nvs_open(NVS_NAMESPACE, NVS_READWRITE, &handle);
+    if (err != ESP_OK) {
+        ESP_LOGW(TAG, "nvs_open failed: %s - not rebooting", esp_err_to_name(err));
+        return;
     }
+
+    err = nvs_set_u8(handle, NVS_KEY_BOOT_FLAG, 1);
+    if (err == ESP_OK) {
+        err = nvs_commit(handle);
+    }
+    nvs_close(handle);
+
+    if (err != ESP_OK) {
+        ESP_LOGW(TAG, "Failed to persist boot flag: %s - not rebooting", esp_err_to_name(err));
+        return;
+    }
+
     esp_restart();
 }
 
@@ -79,9 +91,24 @@ esp_err_t esp_launcher_check_and_run(void)
         .mode = GPIO_MODE_INPUT,
         .pull_up_en = 1,
     };
-    gpio_config(&io_conf);
+    esp_err_t gpio_ret = gpio_config(&io_conf);
+    if (gpio_ret != ESP_OK) {
+        ESP_LOGW(TAG, "Boot button GPIO init failed: %s", esp_err_to_name(gpio_ret));
+    }
 
-    if (gpio_get_level(CONFIG_LAUNCHER_PIN_BOOT_BUTTON) != 0 && !check_boot_flag()) {
+    // Let the internal pull-up settle before sampling, then require the button
+    // to read LOW on several consecutive samples to avoid false triggering.
+    vTaskDelay(pdMS_TO_TICKS(10));
+    bool button_held = true;
+    for (int i = 0; i < 3; ++i) {
+        if (gpio_get_level(CONFIG_LAUNCHER_PIN_BOOT_BUTTON) != 0) {
+            button_held = false;
+            break;
+        }
+        vTaskDelay(pdMS_TO_TICKS(10));
+    }
+
+    if (!button_held && !check_boot_flag()) {
         return ESP_OK;
     }
 
@@ -106,7 +133,7 @@ esp_err_t esp_launcher_check_and_run(void)
             continue;
         }
 
-        firmware_entry_t entries[MAX_FW_FILES];
+        static firmware_entry_t entries[MAX_FW_FILES];
         size_t count = 0;
         ret = esp_launcher_list_firmware(entries, &count);
         if (ret != ESP_OK) {
